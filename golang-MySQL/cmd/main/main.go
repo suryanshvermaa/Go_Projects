@@ -12,9 +12,9 @@ import (
 func main() {
 	r := mux.NewRouter()
 	routes.RegisterBookRoutes(r)
-	http.Handle("/", r)
-	http.HandleFunc("Get /", func(w http.ResponseWriter, r *http.Request) {
+	r.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, 200, "server is healty✅", nil)
-	})
+	}).Methods("GET")
+	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe("localhost:3000", r))
 }
