@@ -32,8 +32,7 @@ func GetBookById(w http.ResponseWriter, r *http.Request) {
 
 func CreateBook(w http.ResponseWriter, r *http.Request) {
 	createBook := &models.Book{}
-	var data models.Book
-	err := json.NewDecoder(r.Body).Decode(&data)
+	err := json.NewDecoder(r.Body).Decode(&createBook)
 	if err != nil {
 		utils.JsonResponse(w, http.StatusBadRequest, "Invalid data", nil)
 		return
