@@ -21,4 +21,10 @@ func main() {
 
 	router := gin.New()
 	router.Use(gin.Logger())
+
+	router.GET("/", func(ctx *gin.Context) {
+		ctx.JSON(200, gin.H{"sucess": "true", "state": "healthy✅"})
+	})
+
+	router.Run(":" + port)
 }
