@@ -5,7 +5,7 @@ import "github.com/gin-gonic/gin"
 type response struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 func Response(c *gin.Context, status int, message string, data interface{}) {

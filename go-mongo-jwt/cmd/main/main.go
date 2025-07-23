@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/suryanshvermaa/Go_Projects/go-mongo-jwt/utils"
 )
 
 func main() {
@@ -23,7 +24,7 @@ func main() {
 	router.Use(gin.Logger())
 
 	router.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{"sucess": "true", "state": "healthy✅"})
+		utils.Response(ctx, 200, "server is healty✅", nil)
 	})
 
 	router.Run(":" + port)
