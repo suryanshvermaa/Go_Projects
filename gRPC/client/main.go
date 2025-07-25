@@ -24,5 +24,8 @@ func main() {
 	names := &pb.NamesList{
 		Names: []string{"Suryansh", "Krishna", "Saurabh", "Abhishek"},
 	}
-	callSayHelloServerStream(client, names)
+	// callSayHello(client)
+	// callSayHelloServerStream(client, names)
+	// callSayHelloClientStream(client, names)
+	callSayHelloBiDirStream(client, names)
 }
