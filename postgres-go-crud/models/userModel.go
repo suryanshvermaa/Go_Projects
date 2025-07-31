@@ -18,7 +18,7 @@ type User struct {
 	ID        uint   `json:"id" gorm:"primaryKey; autoIncrement"`
 	Name      string `json:"name"`
 	Contact   `gorm:"embedded;embeddedPrefix:contact_"`
-	Password  string    `json:"password" gorm:"not null"`
+	Password  string    `json:"password,omitempty" gorm:"not null"`
 	CreatedAt time.Time `json:"created_at"` // it is the specific field which should be as it is for GORM
 	UpdatedAt time.Time `json:"updated_at"` // it is the specific field which should be as it is for GORM
 }
