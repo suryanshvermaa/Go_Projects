@@ -16,5 +16,6 @@ func JsonResponse(w http.ResponseWriter, status int, message string, data interf
 	if status >= 200 && status <= 300 {
 		success = true
 	}
+	w.WriteHeader(status)
 	json.NewEncoder(w).Encode(Response{success, message, data})
 }
