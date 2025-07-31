@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/Go_Projects/postgres-go-crud/utils"
 	"github.com/gorilla/mux"
 	"github.com/joho/godotenv"
 )
@@ -19,8 +20,13 @@ func main() {
 		port = "3000"
 	}
 	router := mux.NewRouter()
-	err = http.ListenAndServe(":"+port, router)
+	// db connection
+	// config.InitDb()
+	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		utils.JsonResponse(w, 200, "server is running healty", nil)
+	}).Methods("GET")
 	log.Printf("Server running on port %s", port)
+	err = http.ListenAndServe(":"+port, router)
 	if err != nil {
 		log.Fatal("Error in running server", err)
 	}
