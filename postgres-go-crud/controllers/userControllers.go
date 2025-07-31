@@ -3,6 +3,7 @@ package controllers
 import (
 	"encoding/json"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/Go_Projects/postgres-go-crud/models"
@@ -25,7 +26,13 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, 400, dbError.Error(), nil)
 		return
 	}
-	utils.JsonResponse(w, 201, "user created", u)
+	token, err := utils.CreateToken(user.Email, strconv.FormatUint(uint64(user.ID), 10))
+	if err != nil {
+		utils.JsonResponse(w, 400, "Error in login", nil)
+		return
+	}
+	u.Password = "" // sensitive cannot be shared
+	utils.JsonResponse(w, 201, "user created", map[string]interface{}{"token": token, "user": u})
 }
 
 type LoginPayload struct {
@@ -53,5 +60,11 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, 400, "Email or password is wrong", nil)
 		return
 	}
-	utils.JsonResponse(w, 400, "Login successful", user)
+	token, err := utils.CreateToken(user.Email, strconv.FormatUint(uint64(user.ID), 10))
+	if err != nil {
+		utils.JsonResponse(w, 400, "Error in login", nil)
+		return
+	}
+	user.Password = "" // sensitive cannot be shared
+	utils.JsonResponse(w, 400, "Login successful", map[string]interface{}{"token": token, "user": user})
 }
