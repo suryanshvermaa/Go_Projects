@@ -21,6 +21,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, 400, "error in decoding body", nil)
 		return
 	}
+	user.Password = utils.HashPassword(user.Password)
 	u, dbError := user.CreateUser()
 	if dbError != nil {
 		utils.JsonResponse(w, 400, dbError.Error(), nil)
@@ -56,7 +57,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, 400, DbErr.Error(), nil)
 		return
 	}
-	if user.Password != data.Password {
+	if !utils.VerifyPassword(user.Password, data.Password) {
 		utils.JsonResponse(w, 400, "Email or password is wrong", nil)
 		return
 	}
