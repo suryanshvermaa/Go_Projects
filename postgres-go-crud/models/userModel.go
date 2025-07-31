@@ -20,13 +20,12 @@ type User struct {
 	UpdatedAt time.Time `json:"updated-at"` // it is the specific field which should be as it is for GORM
 }
 
+func init() {
+	db := config.GetDB()
+	db.AutoMigrate(&User{})
+}
 func (u *User) CreateUser(name string, email string, password string, phone string) *User {
 	db := config.GetDB()
-	var user User
-	user.Name = name
-	user.Contact.Email = &email
-	user.Password = password
-	user.Contact.PhoneNo = phone
-	db.Create(&user)
-	return &user
+	db.Create(&u)
+	return u
 }
