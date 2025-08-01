@@ -67,5 +67,22 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user.Password = "" // sensitive cannot be shared
-	utils.JsonResponse(w, 400, "Login successful", map[string]interface{}{"token": token, "user": user})
+	utils.JsonResponse(w, 200, "Login successful", map[string]interface{}{"token": token, "user": user})
+}
+
+// Protected route only autheticated users can see their profile
+func Profile(w http.ResponseWriter, r *http.Request) {
+	userId := r.Header.Get("userId")
+	userIdUint, err := strconv.ParseUint(userId, 10, 64)
+	if err != nil {
+		utils.JsonResponse(w, 400, "userId is not a valid uint", nil)
+		return
+	}
+	user, err := models.GetUserByUserID(uint(userIdUint))
+	if err != nil {
+		utils.JsonResponse(w, 400, "User not found", nil)
+		return
+	}
+	user.Password = "" // sensitive cannot be shared
+	utils.JsonResponse(w, 200, "user profile fetched successfully", user)
 }

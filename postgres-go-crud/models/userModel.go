@@ -45,3 +45,12 @@ func GetUserByEmail(email string) (*User, error) {
 	}
 	return &user, nil
 }
+
+func GetUserByUserID(userId uint) (*User, error) {
+	var user User
+	result := db.First(&user).Where("ID=?", userId)
+	if user.ID == 0 {
+		return nil, result.Error
+	}
+	return &user, nil
+}
