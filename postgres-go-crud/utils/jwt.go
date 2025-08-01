@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"log"
 	"os"
 	"time"
@@ -43,4 +44,30 @@ func CreateToken(email string, userId string) (string, error) {
 		return "", err
 	}
 	return token, err
+}
+
+func VerifyToken(tokenString string) (*JwtPayLoad, error) {
+	parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("token is not valid or expired")
+		}
+
+		return []byte(jwt_secret), nil
+	})
+
+	// 4. Handle errors.
+	if err != nil {
+		return nil, err
+	}
+
+	// 5. Check if the token is valid and extract claims.
+	if claims, ok := parsedToken.Claims.(jwt.MapClaims); ok && parsedToken.Valid {
+		return &JwtPayLoad{
+			Email:  claims["email"].(string),
+			UserId: claims["userId"].(string),
+		}, nil
+	} else {
+		return nil, errors.New("token is not valid or expired")
+	}
 }
