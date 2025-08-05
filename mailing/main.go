@@ -15,6 +15,6 @@ func main() {
 	}
 	mail := os.Getenv("MY_EMAIL")
 	password := os.Getenv("MY_PASSWORD")
-	SendMail(mail, password, Mail)
+	SendMailByGoMail(mail, password, Mail)
 	fmt.Println("Hello")
 }
