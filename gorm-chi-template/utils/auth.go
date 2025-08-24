@@ -10,9 +10,7 @@ import (
 	"github.com/joho/godotenv"
 )
 
-type Auth struct {
-	secretKey string
-}
+var secretKey string
 
 type JwtPayLoad struct {
 	Email  string `json:"email"`
@@ -20,19 +18,19 @@ type JwtPayLoad struct {
 	jwt.RegisteredClaims
 }
 
-func (a *Auth) setJwtSecret() {
+func setJwtSecret() {
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatal("error in loading .env")
 	}
-	a.secretKey = os.Getenv("AUTH_SECRET_KEY")
+	secretKey = os.Getenv("AUTH_SECRET_KEY")
 }
 
-func (a *Auth) CreateToken(email string, userId string) (string, error) {
-	if a.secretKey == "" {
-		a.setJwtSecret()
+func CreateToken(email string, userId string) (string, error) {
+	if secretKey == "" {
+		setJwtSecret()
 	}
-	secret := []byte(a.secretKey)
+	secret := []byte(secretKey)
 	expirationTime := time.Now().Add(24 * time.Hour)
 	payload := jwt.NewWithClaims(jwt.SigningMethodHS256, &JwtPayLoad{
 		Email:  email,
@@ -48,14 +46,14 @@ func (a *Auth) CreateToken(email string, userId string) (string, error) {
 	return token, err
 }
 
-func (a *Auth) VerifyToken(tokenString string) (*JwtPayLoad, error) {
+func VerifyToken(tokenString string) (*JwtPayLoad, error) {
 	parsedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, errors.New("token is not valid or expired")
 		}
 
-		return []byte(a.secretKey), nil
+		return []byte(secretKey), nil
 	})
 
 	// 4. Handle errors.
