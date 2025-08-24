@@ -8,12 +8,15 @@ import (
 type response struct {
 	Success bool        `json:"success"`
 	Message string      `json:"message"`
-	Data    interface{} `json:"data"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 func JsonResponse(w http.ResponseWriter, statusCode int, message string, data interface{}) {
 	res := response{Success: true, Message: message, Data: data}
 	w.WriteHeader(statusCode)
+	if statusCode >= 400 {
+		res.Success = false
+	}
 	resJson, err := json.Marshal(res)
 	if err != nil {
 		w.WriteHeader(500)

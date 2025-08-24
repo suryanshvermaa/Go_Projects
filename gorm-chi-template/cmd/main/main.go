@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/anshvermaa/go-chi-gorm/utils"
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
 )
@@ -19,7 +20,16 @@ func main() {
 	router := chi.NewRouter()
 
 	router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
-
+		utils.JsonResponse(w, 200, "server is healty", nil)
 	})
-	fmt.Println("Hello")
+
+	server := &http.Server{
+		Addr:    ":" + port,
+		Handler: router,
+	}
+	fmt.Printf("server is running on port: %s\n", port)
+	err = server.ListenAndServe()
+	if err != nil {
+		log.Fatal(err)
+	}
 }
