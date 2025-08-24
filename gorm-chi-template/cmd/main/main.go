@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/anshvermaa/go-chi-gorm/routes"
 	"github.com/anshvermaa/go-chi-gorm/utils"
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
@@ -18,10 +19,10 @@ func main() {
 	}
 	port := os.Getenv("PORT")
 	router := chi.NewRouter()
-
 	router.Get("/health", func(w http.ResponseWriter, r *http.Request) {
 		utils.JsonResponse(w, 200, "server is healty", nil)
 	})
+	router.Mount("/", routes.SetupRoutes())
 
 	server := &http.Server{
 		Addr:    ":" + port,
