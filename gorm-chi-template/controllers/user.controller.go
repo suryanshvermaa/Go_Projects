@@ -7,7 +7,7 @@ import (
 )
 
 func GetUsers(w http.ResponseWriter, r *http.Request) {
-	utils.JsonResponse(w, 200, "user fetched", map[string]any{
+	utils.JsonResponse(w, 200, "user fetched(testing route)", map[string]any{
 		"name":  "Suryansh Verma",
 		"email": "suryanshverma.dev.official@gmail.com",
 	})
