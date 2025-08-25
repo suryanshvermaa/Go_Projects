@@ -1,0 +1,11 @@
+version: "3"
+services:
+  db:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: suryansh
+      MONGO_INITDB_ROOT_PASSWORD: suryansh
