@@ -1,0 +1,32 @@
+services:
+  chi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    environment:
+      - PORT=3000
+    networks:
+      - go-chi-network
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    image: postgres
+    ports:
+      - "5000:5432"
+    environment:
+      - POSTGRES_USER=gorm-chi
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - go-chi-network
+
+networks:
+  go-chi-network:
+    driver: bridge
