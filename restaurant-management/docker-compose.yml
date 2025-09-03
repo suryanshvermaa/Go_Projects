@@ -1,0 +1,12 @@
+services:
+# for mongo db local setup
+  db:
+    image: mongo:7.0.23
+    restart: always
+    ports:
+      - "27000:27017"
+    volumes:
+      - ./data/db:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=suryansh
+      - MONGO_INITDB_ROOT_PASSWORD=suryansh
