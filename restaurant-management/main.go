@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/suryanshvermaa/restaurant-management/helpers"
 	"github.com/suryanshvermaa/restaurant-management/routes"
 )
 
@@ -21,6 +22,11 @@ func main() {
 	router := gin.New()
 	router.Use(gin.Logger())
 	// auth middleware
+
+	// health route
+	router.GET("/health", func(ctx *gin.Context) {
+		helpers.JsonResponse(ctx, 200, "healty", nil)
+	})
 	routes.UserRoutes(router)
 	routes.FoodRoutes(router)
 	// all routes setup
