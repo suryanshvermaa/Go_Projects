@@ -27,9 +27,15 @@ func main() {
 	router.GET("/health", func(ctx *gin.Context) {
 		helpers.JsonResponse(ctx, 200, "healty", nil)
 	})
+	// all routes setup
 	routes.UserRoutes(router)
 	routes.FoodRoutes(router)
-	// all routes setup
+	routes.MenuRoutes(router)
+	routes.NoteRoutes(router)
+	routes.OrderRoutes(router)
+	routes.OrderItemRoutes(router)
+	routes.TableRoutes(router)
+	routes.InvoiceRoutes(router)
 
 	router.Run(":" + port)
 }
