@@ -1,0 +1,14 @@
+{
+    "handler": {
+        "scope": "go",
+        "prefix": "handler",
+        "body": [
+            "func ${1:GetUsers}() gin.HandlerFunc{",
+	        "   return func(ctx *gin.Context) {",
+            "       ${2}",
+	        "   }",
+            "}",
+        ],
+        "description": "snippet for controller handler"
+    }
+}
