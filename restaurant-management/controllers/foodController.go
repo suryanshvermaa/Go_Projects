@@ -19,6 +19,10 @@ import (
 var foodCollection *mongo.Collection = database.OpenCollection(database.Client, "food")
 var validate = validator.New()
 
+// path: /foods
+// method: GET
+// desciption: GetFoods returns a list of foods with pagination support
+// returns: A JSON response containing the list of foods and total count
 func GetFoods() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -62,6 +66,10 @@ func GetFoods() gin.HandlerFunc {
 	}
 }
 
+// path: /foods/:food_id
+// method: GET
+// description: GetFood returns a single food item by its food_id
+// returns: A JSON response containing the food item details
 func GetFood() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -77,6 +85,10 @@ func GetFood() gin.HandlerFunc {
 	}
 }
 
+// path: /foods
+// method: POST
+// description: CreateFood creates a new food item
+// returns: A JSON response containing the created food item details
 func CreateFood() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -117,6 +129,10 @@ func CreateFood() gin.HandlerFunc {
 	}
 }
 
+// path: /foods/:food_id
+// method: PATCH
+// description: UpdateFood updates an existing food item by its food_id
+// returns: A JSON response indicating the success or failure of the update operation
 func UpdateFood() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)

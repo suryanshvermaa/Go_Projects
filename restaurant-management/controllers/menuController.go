@@ -16,6 +16,10 @@ import (
 
 var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
 
+// path: /menus
+// method: GET
+// description: get all menus
+// returns: A JSON response containing the list of menus
 func GetMenus() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -34,6 +38,10 @@ func GetMenus() gin.HandlerFunc {
 	}
 }
 
+// path: /menus/:menu_id
+// method: GET
+// description: get a menu by menu_id
+// returns: A JSON response containing the menu details
 func GetMenu() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)
@@ -49,6 +57,10 @@ func GetMenu() gin.HandlerFunc {
 	}
 }
 
+// path: /menus
+// method: POST
+// description: CreateMenu creates a new menu
+// returns: A JSON response containing the created menu details
 func CreateMenu() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var menu models.Menu
@@ -83,6 +95,10 @@ func inTimeSpace(start, end, check time.Time) bool {
 	return false
 }
 
+// path: /menus/:menu_id
+// method: PATCH
+// description: UpdateMenu updates an existing menu by its menu_id
+// returns: A JSON response indicating the success or failure of the update operation
 func UpdateMenu() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)
