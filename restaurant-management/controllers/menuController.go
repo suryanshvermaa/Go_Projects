@@ -8,9 +8,10 @@ import (
 	"github.com/suryanshvermaa/restaurant-management/database"
 	"github.com/suryanshvermaa/restaurant-management/helpers"
 	"github.com/suryanshvermaa/restaurant-management/models"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
+	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 var menuCollection *mongo.Collection = database.OpenCollection(database.Client, "menu")
@@ -75,8 +76,51 @@ func CreateMenu() gin.HandlerFunc {
 	}
 }
 
+func inTimeSpace(start, end, check time.Time) bool {
+	if check.After(start) && check.Before(end) {
+		return true
+	}
+	return false
+}
+
 func UpdateMenu() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
+		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		var menu models.Menu
+		if err := ctx.BindJSON(&menu); err != nil {
+			helpers.NewError(ctx, 400, err.Error())
+			return
+		}
 
+		menuId := ctx.Param("menu_id")
+		filter := bson.M{"menu_id": menuId}
+		var updateObj bson.D
+
+		if menu.Start_Date != nil && menu.End_Date != nil {
+			if !inTimeSpace(*menu.Start_Date, *menu.End_Date, time.Now()) {
+				helpers.NewError(ctx, 400, "kindly retype the time")
+				return
+			}
+			updateObj = append(updateObj, bson.E{Key: "start_date", Value: menu.Start_Date})
+			updateObj = append(updateObj, bson.E{Key: "end_date", Value: menu.End_Date})
+		}
+		if menu.Name != "" {
+			updateObj = append(updateObj, bson.E{Key: "name", Value: menu.Name})
+		}
+		if menu.Category != "" {
+			updateObj = append(updateObj, bson.E{Key: "category", Value: menu.Category})
+		}
+		menu.Updated_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
+		updateObj = append(updateObj, bson.E{Key: "updated_at", Value: menu.Updated_At})
+
+		upsert := true
+		opt := options.UpdateOne().SetUpsert(upsert)
+		result, err := menuCollection.UpdateOne(c, filter, bson.D{{Key: "$set", Value: updateObj}}, opt)
+		defer cancel()
+		if err != nil {
+			helpers.NewError(ctx, 500, "menu update failed")
+			return
+		}
+		helpers.JsonResponse(ctx, 200, "menu updated successfully", result)
 	}
 }
