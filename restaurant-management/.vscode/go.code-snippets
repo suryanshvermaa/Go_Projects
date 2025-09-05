@@ -10,5 +10,11 @@
             "}",
         ],
         "description": "snippet for controller handler"
+    },
+    "context": {
+        "scope": "go",
+        "prefix": "context",
+        "body": "var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)",
+        "description": "snippet for context"
     }
 }
