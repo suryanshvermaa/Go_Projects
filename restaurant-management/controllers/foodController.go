@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"strconv"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,41 @@ var validate = validator.New()
 
 func GetFoods() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-
+		var c, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		recordPerPage, err := strconv.Atoi(ctx.Query("recordPerPage"))
+		if err != nil || recordPerPage < 1 {
+			recordPerPage = 10
+		}
+		var foods []bson.M
+		page, err := strconv.Atoi(ctx.Query("page"))
+		if err != nil || page < 1 {
+			page = 1
+		}
+		startIndex := (page - 1) * recordPerPage
+		matchStage := bson.D{{Key: "$match", Value: bson.D{{}}}}
+		groupStage := bson.D{{Key: "$group", Value: bson.D{
+			{Key: "_id", Value: bson.D{{Key: "_id", Value: "null"}}},
+			{Key: "total_count", Value: bson.D{{Key: "$sum", Value: 1}}},
+			{Key: "data", Value: bson.D{{Key: "$push", Value: "$$ROOT"}}},
+		}}}
+		projectStage := bson.D{
+			{Key: "$project", Value: bson.D{
+				{Key: "_id", Value: 0},
+				{Key: "total_count", Value: 1},
+				{Key: "food_items", Value: bson.D{{Key: "$slice", Value: []interface{}{"$data", startIndex, recordPerPage}}}},
+			}},
+		}
+		result, err := foodCollection.Aggregate(c, mongo.Pipeline{matchStage, groupStage, projectStage})
+		if err != nil {
+			helpers.NewError(ctx, 500, "error occured while listing food items")
+			return
+		}
+		if err = result.All(c, &foods); err != nil {
+			helpers.NewError(ctx, 500, err.Error())
+			return
+		}
+		defer cancel()
+		helpers.JsonResponse(ctx, 200, "foods fetched successfully", foods)
 	}
 }
 
