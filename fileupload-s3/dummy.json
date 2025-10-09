@@ -1,0 +1,23 @@
+{
+    "id": 1,
+    "name": "John Doe",
+    "email": "john.doe@example.com",
+    "age": 30,
+    "city": "New York",
+    "country": "USA",
+    "phone": "+1-555-0123",
+    "occupation": "Software Engineer",
+    "company": "Tech Corp",
+    "salary": 75000,
+    "isActive": true,
+    "hobbies": ["reading", "gaming", "hiking"],
+    "address": {
+        "street": "123 Main St",
+        "zipCode": "10001"
+    },
+    "dateJoined": "2023-01-15",
+    "skills": ["JavaScript", "Python", "Go"],
+    "rating": 4.5,
+    "hasVehicle": false,
+    "lastLogin": "2024-01-20T10:30:00Z"
+}
