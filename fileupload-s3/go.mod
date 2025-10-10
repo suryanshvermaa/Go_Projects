@@ -6,6 +6,8 @@ require (
 	github.com/aws/aws-sdk-go-v2 v1.39.2
 	github.com/aws/aws-sdk-go-v2/service/s3 v1.88.4
 	github.com/aws/smithy-go v1.23.0
+	github.com/joho/godotenv v1.5.1
+	github.com/kelseyhightower/envconfig v1.4.0
 )
 
 require (
